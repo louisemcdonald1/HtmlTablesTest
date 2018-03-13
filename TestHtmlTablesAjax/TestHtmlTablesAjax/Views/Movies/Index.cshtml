@@ -1,0 +1,159 @@
+﻿@model IEnumerable<TestHtmlTablesAjax.Models.Movie>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@if (IsPost)
+{
+    <script>restoreScrollPosition()</script>
+}
+@*<script>window.pageYOffset=document.cookie;</script>*@
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReleaseDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Genre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Likes)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Dislikes)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+
+        </tr>
+    </thead>
+    @*do data rows in table*@
+    <tbody>
+        @foreach (var item in Model)
+        {
+            @*@Html.Action("_TableRow", new { id = item.Id })*@
+
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReleaseDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Genre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Likes)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Dislikes)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @using (Ajax.BeginForm(
+                                        actionName: "_Like",
+                                        controllerName: "Movies",
+                                        routeValues: new { id = item.Id },
+                                        ajaxOptions: new AjaxOptions
+                                        {
+                                            HttpMethod = "Post",
+                                            OnSuccess = "Success"
+                                        },
+                                        htmlAttributes: new { @class = "trow" }
+                                ))
+                    {
+                        <input id="likeButton" type="submit" value="Like" onclick="saveScrollPosition()" onmouseup="restoreScrollPosition()" />
+                        
+                        //document.cookie = window.pageYOffset;
+
+                    }
+                </td>
+                <td>
+                    @using (Ajax.BeginForm(
+                                        actionName: "_Dislike",
+                                        controllerName: "Movies",
+                                        routeValues: new { id = item.Id },
+                                        ajaxOptions: new AjaxOptions
+                                        {
+                                            HttpMethod = "Post",
+                                            OnSuccess = "Success"
+                                        },
+                                        htmlAttributes: new { @class = "trow" }
+                                ))
+                    {
+                        <input type="submit" value="Dislike" />
+                    }
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </td>
+            </tr>
+        }
+    </tbody>
+    @*@foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReleaseDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Genre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Likes)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Dislikes)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+                </td>
+            </tr>
+        }*@
+
+</table>
+@*<script src="~/Scripts/maintainscroll.jquery.min.js"></script>*@
+<script>
+
+    function saveScrollPosition()
+    {
+        alert('scroll position is ' + window.pageYOffset);
+        //document.cookie = "scrollPosition=" + window.pageYOffset;
+        //alert('1 contents of cookie are ' + document.cookie);
+        var scrollPosition = window.pageYOffset;
+    }
+    
+    function restoreScrollPosition()
+    {
+        alert('restoring scroll position to scroll position ' + scrollPosition);
+        alert('restoring scroll position to pageYoffset ' + window.pageYOffset);
+        
+        //alert('2 contents of cookie are ' + document.cookie);
+        window.pageYOffset = scrollPosition;
+    }
+
+
+</script>
